@@ -1,38 +1,46 @@
 <template>
-	<div :class="containerClass" @click="onWrapperClick">
+  <Login v-if="!authStore.email"/>
+
+	<div v-else :class="containerClass" @click="onWrapperClick">
 		<AppTopBar @menu-toggle="onMenuToggle" />
 
-        <transition name="layout-sidebar">
-            <div :class="sidebarClass" @click="onSidebarClick" v-show="isSidebarVisible()">
-                <div class="layout-logo">
-                    <router-link to="/">
-                        <img alt="Logo" :src="logo" />
-                    </router-link>
-                </div>
-
-                <AppProfile />
-                <AppMenu :model="menu" @menuitem-click="onMenuItemClick" />
+    <transition name="layout-sidebar">
+        <div :class="sidebarClass" @click="onSidebarClick" v-show="isSidebarVisible()">
+            <div class="layout-logo">
+                <router-link to="/">
+                    <img alt="Logo" :src="logo" />
+                </router-link>
             </div>
-        </transition>
+
+            <AppProfile />
+            <AppMenu :model="menu" @menuitem-click="onMenuItemClick" />
+        </div>
+    </transition>
 
 		<div class="layout-main">
 			<router-view />
 		</div>
 
-		<AppConfig :layoutMode="layoutMode" :layoutColorMode="layoutColorMode" @layout-change="onLayoutChange" @layout-color-change="onLayoutColorChange"/>
 
 		<AppFooter />
 	</div>
 </template>
 
 <script>
-import AppTopBar from './AppTopbar.vue';
-import AppProfile from './AppProfile.vue';
-import AppMenu from './AppMenu.vue';
-import AppConfig from './AppConfig.vue';
-import AppFooter from './AppFooter.vue';
+import AppTopBar from '@/components/globals/AppTopbar.vue';
+import AppProfile from '@/components/globals/AppProfile.vue';
+import AppMenu from '@/components/globals/AppMenu.vue';
+import AppFooter from '@/components/globals/AppFooter.vue';
+import { useAuthStore } from '@/store/auth';
+import Login from '@/pages/Login.vue';
 
 export default {
+    setup() {
+      const authStore = useAuthStore();
+      return {
+        authStore,
+      };
+    },
     data() {
         return {
             layoutMode: 'static',
@@ -244,11 +252,11 @@ export default {
             this.removeClass(document.body, 'body-overflow-hidden');
     },
     components: {
-        'AppTopBar': AppTopBar,
-        'AppProfile': AppProfile,
-        'AppMenu': AppMenu,
-        'AppConfig': AppConfig,
-        'AppFooter': AppFooter,
+        AppTopBar,
+        AppProfile,
+        AppMenu,
+        AppFooter,
+        Login,
     }
 }
 </script>

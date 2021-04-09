@@ -1,13 +1,9 @@
 {
 	"name": "sigma-vue",
 	"version": "3.0.0",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/primefaces/sigma-vue.git"
-	},
 	"license": "MIT",
 	"scripts": {
-		"serve": "vue-cli-service serve",
+		"serve": "vue-cli-service serve --port=8089",
 		"build": "vue-cli-service build",
 		"lint": "vue-cli-service lint",
 		"test:unit": "vue-cli-service test:unit"
@@ -36,6 +32,7 @@
 		"axios": "^0.19.0",
 		"chart.js": "2.7.3",
 		"core-js": "^3.6.5",
+    "pinia": "^2.0.0-alpha.11",
 		"primeflex": "2.0.0",
 		"primeicons": "4.1.0",
 		"primevue": "3.3.4",
