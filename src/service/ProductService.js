@@ -7,7 +7,8 @@ export default class ProductService {
       .then((res) => res.data.data);
   }
 
-  getProducts() {
+  getProducts(filter) {
+    console.log(filter);
     return axios
       .get('assets/layout/data/products.json')
       .then((res) => res.data.data);

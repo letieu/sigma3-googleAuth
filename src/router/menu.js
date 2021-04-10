@@ -1,8 +1,18 @@
 export default [
   {
-    label: 'Elevation',
+    label: 'Test',
     icon: 'pi pi-fw pi-external-link',
-    to: '/elevation',
+    to: '/test',
+  },
+  {
+    label: 'Advertiser',
+    icon: 'pi pi-fw pi-external-link',
+    to: '/advertiser',
+  },
+  {
+    label: 'Consolidation',
+    icon: 'pi pi-fw pi-external-link',
+    to: '/consolidation',
   },
   {
     label: 'Utilities',

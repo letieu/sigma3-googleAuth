@@ -1,27 +1,30 @@
 import axios from 'axios';
 
 export default class CustomerService {
-  getCustomersSmall() {
-    return axios
-      .get('assets/layout/data/customers-small.json')
-      .then((res) => res.data.data);
+  async getCustomersSmall() {
+    const res = await axios.get('assets/layout/data/customers-small.json');
+    return res.data.data;
   }
 
-  getCustomersMedium() {
-    return axios
-      .get('assets/layout/data/customers-medium.json')
-      .then((res) => res.data.data);
+  async getCustomersMedium() {
+    const res = await axios.get('assets/layout/data/customers-medium.json');
+    return res.data.data;
   }
 
-  getCustomersLarge() {
-    return axios
-      .get('assets/layout/data/customers-large.json')
-      .then((res) => res.data.data);
+  async getCustomersLarge() {
+    const res = await axios.get('assets/layout/data/customers-large.json');
+    return res.data.data;
   }
 
-  getCustomersXLarge() {
-    return axios
-      .get('assets/layout/data/customers-xlarge.json')
-      .then((res) => res.data.data);
+  async getCustomersXLarge() {
+    const res = await axios.get('assets/layout/data/customers-xlarge.json');
+    return res.data.data;
+  }
+
+  async getCustomers(params) {
+    const res = await axios.get('https://www.primefaces.org/data/customers', {
+      params,
+    });
+    return res.data;
   }
 }
