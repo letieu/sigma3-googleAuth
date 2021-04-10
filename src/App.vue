@@ -22,6 +22,7 @@
     </transition>
 
     <div class="layout-main">
+      <Breadcrumb class="p-mb-5" :home="home" :model="breadCrumb" />
       <router-view />
     </div>
 
@@ -34,15 +35,34 @@ import AppTopBar from '@/components/globals/AppTopbar.vue';
 import AppProfile from '@/components/globals/AppProfile.vue';
 import AppMenu from '@/components/globals/AppMenu.vue';
 import AppFooter from '@/components/globals/AppFooter.vue';
+import { computed } from 'vue';
 import { useAuthStore } from '@/store/auth';
+import { useRoute } from 'vue-router';
+import routes from '@/router/routes';
 import Login from '@/pages/Login.vue';
 import menu from '@/router/menu';
 
 export default {
   setup() {
     const authStore = useAuthStore();
+    const route = useRoute();
+    const home = { icon: 'pi pi-home', to: '/' };
+
+    const breadCrumb = computed(() => {
+      const items = [];
+      let parentNames = route.meta.parents ?? [];
+      parentNames.forEach((parentName) => {
+        const parentRoute = routes.find((r) => r.name === parentName);
+        items.push({ label: parentRoute.name, to: parentRoute.path });
+      });
+      items.push({ label: route.params?.id ?? route.name, to: route.path });
+      return items;
+    });
+
     return {
       authStore,
+      home,
+      breadCrumb,
     };
   },
   data() {

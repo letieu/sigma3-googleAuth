@@ -23,6 +23,11 @@
             placeholder="Search by name"
           />
         </template>
+        <template #body="slotProps">
+          <router-link :to="{ name: 'consolidation-detail', params: { id: 'asdfff' } }">
+            {{ slotProps.data.name }}
+          </router-link>
+        </template>
       </Column>
 
       <Column field="name" header="Name" ref="name">
