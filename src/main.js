@@ -15,9 +15,9 @@ import App from './App.vue';
 import initPrime from './plugins/prime';
 import { createPinia } from 'pinia';
 
-router.beforeEach(function(to, from, next) {
-    window.scrollTo(0, 0);
-    next();
+router.beforeEach(function (to, from, next) {
+  window.scrollTo(0, 0);
+  next();
 });
 
 const app = createApp(App);

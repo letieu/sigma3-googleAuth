@@ -57,7 +57,7 @@ import Rating from 'primevue/rating';
 import RadioButton from 'primevue/radiobutton';
 import Ripple from 'primevue/ripple';
 import SelectButton from 'primevue/selectbutton';
-import ScrollPanel from 'primevue/scrollpanel'
+import ScrollPanel from 'primevue/scrollpanel';
 import ScrollTop from 'primevue/scrolltop';
 import Slider from 'primevue/slider';
 import Sidebar from 'primevue/sidebar';

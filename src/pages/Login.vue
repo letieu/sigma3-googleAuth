@@ -1,9 +1,27 @@
 <template>
-  <div>
-    <div v-if="loading">loading</div>
-    <div v-if="error">{{ error }}</div>
-
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  <div class="p-d-flex p-ai-center p-jc-center" style="height: 100vh">
+    <Card style="width: 35em" class="p-shadow-20">
+      <template #header>
+        <img
+          src="https://www.primefaces.org/wp-content/uploads/2020/02/primefacesorg-primevue-2020.png"
+        />
+      </template>
+      <template #title> Advanced Card </template>
+      <template #subtitle> Card subtitle </template>
+      <template #content>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore
+          sed consequuntur error repudiandae numquam deserunt quisquam repellat
+          libero asperiores earum nam nobis, culpa ratione quam perferendis
+          esse, cupiditate neque quas!
+        </p>
+      </template>
+      <template #footer>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <ProgressSpinner v-if="loading" />
+        <Message v-if="error" severity="error">{{ error }}</Message>
+      </template>
+    </Card>
   </div>
 </template>
 
