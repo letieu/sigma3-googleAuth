@@ -1,10 +1,12 @@
 export default [
+  // Advertiser
   {
     path: '/advertiser',
     name: 'advertiser',
     component: () => import('@/pages/advertiser/Index.vue'),
   },
 
+  // Consolidation
   {
     path: '/consolidation',
     name: 'consolidation',
@@ -19,6 +21,7 @@ export default [
     },
   },
 
+  // Publisher
   {
     path: '/test',
     name: 'test',

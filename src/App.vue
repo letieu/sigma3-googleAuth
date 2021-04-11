@@ -3,6 +3,7 @@
 
   <div v-else :class="containerClass" @click="onWrapperClick">
     <AppTopBar @menu-toggle="onMenuToggle" />
+    <Toast />
 
     <transition name="layout-sidebar">
       <div

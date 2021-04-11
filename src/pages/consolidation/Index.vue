@@ -24,7 +24,9 @@
           />
         </template>
         <template #body="slotProps">
-          <router-link :to="{ name: 'consolidation-detail', params: { id: 'asdfff' } }">
+          <router-link
+            :to="{ name: 'consolidation-detail', params: { id: 'asdfff' } }"
+          >
             {{ slotProps.data.name }}
           </router-link>
         </template>
@@ -61,20 +63,27 @@
 import { ref } from 'vue';
 import CustomerService from '@/service/CustomerService';
 import { useFetchData } from '@/composable/useFetchData';
+import { useNotify } from '@/composable/useNotify';
 
 export default {
   setup() {
     const customers = ref([]);
     const customerService = new CustomerService();
     const loading = ref(false);
+    const notify = useNotify();
 
     async function fetchData(query) {
       loading.value = true;
-      const data = await customerService.getCustomers(query);
-      customers.value = data.customers;
-      loading.value = false;
-
-      return data.totalRecords;
+      try {
+        const data = await customerService.getCustomers(query);
+        customers.value = data.customers;
+        return data.totalRecords;
+      } catch (e) {
+        notify.error(e);
+        return 0;
+      } finally {
+        loading.value = false;
+      }
     }
 
     return {
