@@ -1,9 +1,13 @@
 import { onBeforeMount, reactive, ref, watch } from 'vue';
 
-export function useFetchData(fetch, query = {}) {
+export function useFetchData(
+  fetch,
+  query = {},
+  options = { watchFilter: true, preloadData: true }
+) {
   const filters = reactive({
     ...query,
-    page: 0,
+    page: 1,
     size: 20,
   });
   const totalRecords = ref();
@@ -23,18 +27,30 @@ export function useFetchData(fetch, query = {}) {
     filters[field] = value;
   };
 
-  watch(
-    () => ({ ...filters }),
-    (val, old) => {
-      if (val.page === old.page) {
-        filters.page = 1;
-      }
-      fetchData();
-    },
-    { deep: true }
-  );
+  if (options.watchFilter) {
+    watch(
+      () => ({ ...filters }),
+      (val, old) => {
+        if (val.page === old.page) {
+          filters.page = 1;
+        }
+        fetchData();
+      },
+      { deep: true }
+    );
+  } else {
+    watch(
+      () => filters.page,
+      () => fetchData()
+    );
 
-  onBeforeMount(() => fetchData());
+    watch(
+      () => filters.size,
+      () => fetchData()
+    );
+  }
 
-  return { onPage, onFilter, totalRecords, filters };
+  if (options.preloadData) onBeforeMount(() => fetchData());
+
+  return { onPage, onFilter, totalRecords, filters, fetchData };
 }

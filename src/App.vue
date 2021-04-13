@@ -37,7 +37,7 @@ import AppProfile from '@/components/globals/AppProfile.vue';
 import AppMenu from '@/components/globals/AppMenu.vue';
 import AppFooter from '@/components/globals/AppFooter.vue';
 import { computed } from 'vue';
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '@/stores/auth';
 import { useRoute } from 'vue-router';
 import routes from '@/router/routes';
 import Login from '@/pages/Login.vue';

@@ -13,6 +13,14 @@ export default [
     component: () => import('@/pages/consolidation/Index.vue'),
   },
   {
+    path: '/consolidation/create',
+    name: 'consolidation-create',
+    component: () => import('@/pages/consolidation/Create.vue'),
+    meta: {
+      parents: ['consolidation'],
+    },
+  },
+  {
     path: '/consolidation/:id',
     name: 'consolidation-detail',
     component: () => import('@/pages/consolidation/Detail.vue'),

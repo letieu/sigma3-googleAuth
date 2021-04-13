@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import ProductService from '@/service/ProductService';
+import ProductService from '@/services/ProductService';
 import { onBeforeMount, reactive, ref } from 'vue';
 
 export default {

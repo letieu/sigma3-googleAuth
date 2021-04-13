@@ -22,8 +22,7 @@ export default class CustomerService {
   }
 
   async getCustomers(params) {
-//https://www.primefaces.org/data/customers
-    const res = await axios.get('/message', {
+    const res = await axios.get('/consolidations', {
       params,
     });
     return res.data;

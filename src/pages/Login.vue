@@ -27,7 +27,7 @@
 
 <script>
 import { onBeforeMount, ref } from 'vue';
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
 
 function useGoogleLogin() {
