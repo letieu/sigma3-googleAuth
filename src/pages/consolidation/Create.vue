@@ -153,7 +153,6 @@ export default {
     const notify = useNotify();
     const authStore = useAuthStore();
     const router = useRouter();
-    const previewConversion = usePreviewConversion(params);
     const creating = ref(false);
     const rules = {
       advertiser_id: { required },
@@ -167,6 +166,7 @@ export default {
       created_by: authStore.email,
     };
 
+    const previewConversion = usePreviewConversion(params);
     const validator = useVuelidate(rules, previewConversion.filters);
 
     async function submit() {

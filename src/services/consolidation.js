@@ -17,14 +17,19 @@ export const consolidationService = {
     return Response.fromPaginate(res);
   },
   async getConversionsPreview(params) {
-    const res = await axios.get(`/consolidations/1/conversions`, {
+    const res = await axios.get('/consolidations/previews', {
       params,
     });
     return Response.fromPaginate(res);
   },
 
   async create(payload) {
-    const res = await axios.post(`/consolidations`, payload);
+    const res = await axios.post('/consolidations', payload);
+    return Response.fromOne(res);
+  },
+
+  async update(id, payload) {
+    const res = await axios.put(`/consolidations/${id}`, payload);
     return Response.fromOne(res);
   },
 };

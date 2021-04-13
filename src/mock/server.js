@@ -18,9 +18,11 @@ export function startMocking() {
     },
     routes() {
       this.get('/consolidations', Consolidations.all);
+      this.get('/consolidations/previews', Conversions.all);
       this.post('/consolidations', Consolidations.store);
       this.get('/consolidations/:id/conversions', Conversions.all);
       this.get('/consolidations/:id', Consolidations.one);
+      this.put('/consolidations/:id', Consolidations.update);
 
       this.passthrough();
       this.passthrough(process.env.VUE_APP_IAM_URL);

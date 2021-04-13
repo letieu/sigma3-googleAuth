@@ -55,4 +55,12 @@ export const Consolidations = {
     const consolidation = schema.consolidations.find(1);
     return response(consolidation);
   },
+  update(schema, request) {
+    let { status, modified_by } = JSON.parse(request.requestBody);
+    const consolidation = schema.consolidations.find(request.params.id);
+    consolidation.status = status;
+    consolidation.modified_by = modified_by;
+
+    return response(consolidation);
+  },
 };

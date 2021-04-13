@@ -2,14 +2,16 @@
   <Toolbar>
     <template #left>
       <Button label="New" icon="pi pi-plus" class="p-mr-2" />
-      <Button label="Upload" icon="pi pi-upload" class="p-button-success" />
-      <i class="pi pi-bars p-toolbar-separator p-mr-2" />
-      <SplitButton
-        label="Save"
+      <Button
+        label="Next"
         icon="pi pi-check"
-        :model="items"
-        class="p-button-warning"
-      ></SplitButton>
+        class="p-button-success"
+        :disabled="updating || !getNextStatus(consolidation.status)"
+        @click="update(consolidation)"
+      />
+      <i class="pi pi-bars p-toolbar-separator p-mr-2" />
+
+      <ProgressSpinner v-if="updating" style="width: 30px; height: 30px" />
     </template>
 
     <template #right>
@@ -76,6 +78,45 @@ import { onBeforeMount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStatus } from '@/composable/useStatus';
 import Conversion from './components/Conversions.vue';
+import { useAuthStore } from '@/stores/auth';
+import { useNotify } from '@/composable/useNotify';
+
+function useUpdateConsolidation(consolidation) {
+  const authStore = useAuthStore();
+  const notify = useNotify();
+  const updating = ref(false);
+
+  async function update() {
+    const status = getNextStatus(consolidation.value.status);
+    if (!status) return;
+    updating.value = true;
+    try {
+      const { data } = await consolidationService.update(
+        consolidation.value.id,
+        {
+          status: status,
+          modified_by: authStore.email,
+        }
+      );
+      consolidation.value = data;
+    } catch (e) {
+      notify.error(e);
+    } finally {
+      updating.value = false;
+    }
+  }
+
+  function getNextStatus(currentStatus) {
+    const { consolidationStatuses } = useStatus();
+    const currentStatusIndex = consolidationStatuses.findIndex(
+      (status) => status.code == currentStatus
+    );
+
+    return consolidationStatuses[currentStatusIndex + 1]?.code;
+  }
+
+  return { update, updating, getNextStatus };
+}
 
 export default {
   components: {
@@ -92,6 +133,7 @@ export default {
 
     return {
       consolidation,
+      ...useUpdateConsolidation(consolidation),
       ...useStatus(),
     };
   },
