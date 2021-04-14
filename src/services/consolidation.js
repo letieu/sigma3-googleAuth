@@ -32,4 +32,8 @@ export const consolidationService = {
     const res = await axios.put(`/consolidations/${id}`, payload);
     return Response.fromOne(res);
   },
+  async getSummary(id) {
+    const res = await axios.get(`/consolidations/${id}/summary`);
+    return Response.fromOne(res);
+  },
 };

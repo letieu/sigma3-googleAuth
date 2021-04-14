@@ -1,11 +1,15 @@
 <template>
   <Toolbar>
     <template #left>
-      <Button label="New" icon="pi pi-plus" class="p-mr-2" />
+      <Summary
+        v-if="consolidation.id"
+        :consolidation="consolidation"
+        class="p-mr-2"
+      />
       <Button
         label="Next"
         icon="pi pi-check"
-        class="p-button-success"
+        class="p-button-success p-ml-2"
         :disabled="updating || !getNextStatus(consolidation.status)"
         @click="update(consolidation)"
       />
@@ -77,9 +81,11 @@ import { consolidationService } from '@/services/consolidation';
 import { onBeforeMount, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStatus } from '@/composable/useStatus';
-import Conversion from './components/Conversions.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useNotify } from '@/composable/useNotify';
+
+import Conversion from './components/Conversions.vue';
+import Summary from './components/Summary.vue';
 
 function useUpdateConsolidation(consolidation) {
   const authStore = useAuthStore();
@@ -121,6 +127,7 @@ function useUpdateConsolidation(consolidation) {
 export default {
   components: {
     Conversion,
+    Summary,
   },
   setup() {
     const consolidation = ref({});

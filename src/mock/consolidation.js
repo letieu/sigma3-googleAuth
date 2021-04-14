@@ -63,4 +63,8 @@ export const Consolidations = {
 
     return response(consolidation);
   },
+  summary(schema) {
+    const offers = schema.offers.all().models;
+    return response(offers);
+  },
 };
