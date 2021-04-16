@@ -43,6 +43,7 @@
             class="p-column-filter"
             data-field="advertiser_id"
             @keyup.enter="onFilter"
+            :value="filters.advertiser_id"
             placeholder="Advertiser ID"
           />
         </template>
@@ -54,6 +55,7 @@
             type="text"
             class="p-column-filter"
             data-field="created_by"
+            :value="filters.created_by"
             @keyup.enter="onFilter"
             placeholder="Created by"
           />
@@ -104,6 +106,7 @@ import { useFetchData } from '@/composable/useFetchData';
 import { useNotify } from '@/composable/useNotify';
 import { useStatus } from '@/composable/useStatus';
 import { TDate } from '@/helper';
+import { useFilterStore } from '@/stores/filter';
 import DateRange from '@/components/DateRange.vue';
 import VStatus from '@/components/VStatus.vue';
 
@@ -116,7 +119,9 @@ export default {
     const consolidations = ref([]);
     const loading = ref(false);
     const notify = useNotify();
-    const params = {
+    const filterStore = useFilterStore();
+
+    const params = filterStore.getFilter('consolidation') ?? {
       start_date: TDate.today(),
       end_date: TDate.today(),
       status: '',
@@ -127,6 +132,7 @@ export default {
       try {
         const { data, meta } = await consolidationService.getAll(query);
         consolidations.value = data;
+        filterStore.cacheFilter('consolidation', query);
         return meta.totalRows;
       } catch (e) {
         notify.error(e);

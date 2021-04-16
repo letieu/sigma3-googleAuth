@@ -42,6 +42,7 @@
             class="p-column-filter"
             data-field="created_by"
             @keyup.enter="onFilter"
+            :value="filters.created_by"
             placeholder="Created by"
           />
         </template>
@@ -110,6 +111,7 @@ import { useFetchData } from '@/composable/useFetchData';
 import { useNotify } from '@/composable/useNotify';
 import { useStatus } from '@/composable/useStatus';
 import DateRange from '@/components/DateRange.vue';
+import { useFilterStore } from '@/stores/filter';
 import { TDate } from '@/helper';
 import VStatus from '@/components/VStatus';
 import AdvertiserPay from './components/AdvertiserPay.vue';
@@ -124,7 +126,9 @@ export default {
     const advertisers = ref([]);
     const loading = ref(false);
     const notify = useNotify();
-    const params = {
+    const filterStore = useFilterStore();
+
+    const params = filterStore.getFilter('advertiser') ?? {
       start_date: TDate.today(),
       end_date: TDate.today(),
       status: '',
@@ -135,6 +139,7 @@ export default {
       try {
         const { data, meta } = await advertiserService.getAll(query);
         advertisers.value = data;
+        filterStore.cacheFilter('advertiser', query);
         return meta.totalRows;
       } catch (e) {
         notify.error(e);
@@ -153,49 +158,3 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss">
-.table-header {
-  display: flex;
-  justify-content: space-between;
-}
-.product-image {
-  width: 100px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-}
-.p-dialog .product-image {
-  width: 150px;
-  margin: 0 auto 2rem auto;
-  display: block;
-}
-.confirmation-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.product-badge {
-  border-radius: 2px;
-  padding: 0.25em 0.5rem;
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.3px;
-  &.status-instock {
-    background: #c8e6c9;
-    color: #256029;
-  }
-  &.status-outofstock {
-    background: #ffcdd2;
-    color: #c63737;
-  }
-  &.status-lowstock {
-    background: #feedaf;
-    color: #8a5340;
-  }
-}
-::v-deep(.p-toolbar) {
-  flex-wrap: wrap;
-  .p-button {
-    margin-bottom: 0.25rem;
-  }
-}
-</style>
