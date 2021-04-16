@@ -73,7 +73,7 @@
         </template>
       </Column>
 
-      <Column field="status" header="Total payout" ref="status">
+      <Column field="status" header="Status" ref="status">
         <template #filter>
           <Dropdown
             :modelValue="getStatusObject(consolidationStatuses, filters.status)"
@@ -83,9 +83,15 @@
             placeholder="Status"
           />
         </template>
+        <template #body="{ data }">
+          <v-status :options="consolidationStatuses" :code="data.status" />
+        </template>
       </Column>
 
       <Column field="adflex_payout" header="Total payout" ref="adflex_payout">
+        <template #body="{ data }">
+          {{ $formatMoney(data, 'adflex_payout') }}
+        </template>
       </Column>
     </DataTable>
   </div>
@@ -97,12 +103,14 @@ import { consolidationService } from '@/services/consolidation';
 import { useFetchData } from '@/composable/useFetchData';
 import { useNotify } from '@/composable/useNotify';
 import { useStatus } from '@/composable/useStatus';
-import DateRange from '@/components/DateRange.vue';
 import { TDate } from '@/helper';
+import DateRange from '@/components/DateRange.vue';
+import VStatus from '@/components/VStatus.vue';
 
 export default {
   components: {
     DateRange,
+    VStatus,
   },
   setup() {
     const consolidations = ref([]);

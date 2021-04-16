@@ -14,11 +14,13 @@ import router from './router';
 import App from './App.vue';
 import initPrime from './plugins/prime';
 import initAxios from './plugins/axios';
+import initFilter from './plugins/filter';
 import { createPinia } from 'pinia';
 
 initAxios();
 const app = createApp(App);
 initPrime(app);
+initFilter(app);
 
 app.config.globalProperties.$appState = reactive({ inputStyle: 'filled' });
 

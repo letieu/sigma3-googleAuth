@@ -41,14 +41,26 @@
               <Column field="customer_name" header="Name" sortable></Column>
               <Column field="customer_phone" header="Phone" sortable></Column>
               <Column field="quantity" header="Quantity" sortable></Column>
-              <Column field="adflex_payout" header="Payout" sortable></Column>
+              <Column header="adflex_payout">
+                <template #body="{ data }">
+                  {{ $formatMoney(data, 'adflex_payout') }}
+                </template>
+              </Column>
               <Column field="reason" header="Reason" sortable></Column>
             </DataTable>
           </OverlayPanel>
         </template>
       </Column>
-      <Column field="offer_adflex_payout" header="Price unit"></Column>
-      <Column field="adflex_payout" header="Total"></Column>
+      <Column header="Price unit">
+        <template #body="{ data }">
+          {{ $formatMoney(data, 'offer_adflex_payout') }}
+        </template>
+      </Column>
+      <Column header="Price unit">
+        <template #body="{ data }">
+          {{ $formatMoney(data, 'offer_adflex_payout') }}
+        </template>
+      </Column>
     </DataTable>
   </Dialog>
 </template>

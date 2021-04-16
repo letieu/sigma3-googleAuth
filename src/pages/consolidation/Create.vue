@@ -63,36 +63,15 @@
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         responsiveLayout="scroll"
       >
-        <Column field="id" header="ID" ref="id">
-          <template #body="slotProps">
-            <router-link
-              :to="{
-                name: 'consolidation-detail',
-                params: { id: slotProps.data.id },
-              }"
-            >
-              {{ slotProps.data.id }}
-            </router-link>
+        <Column field="id" header="Conversion ID" />
+        <Column field="advertiser_id" header="Advertiser ID" />
+        <Column field="adflex_payout" header="Total payout" />
+        <Column field="status" header="Status">
+          <template #body="{ data }">
+            <v-status :options="conversionStatuses" :code="data.status" />
           </template>
         </Column>
-
-        <Column
-          field="advertiser_id"
-          header="Advertiser ID"
-          ref="advertiser_id"
-        >
-        </Column>
-
-        <Column field="created_by" header="Created by" ref="created_by">
-        </Column>
-
-        <Column field="start_date" header="Start - End" ref="start_date">
-        </Column>
-
-        <Column field="status" header="Total payout" ref="status"> </Column>
-
-        <Column field="adflex_payout" header="Total payout" ref="adflex_payout">
-        </Column>
+        <Column field="reason" header="Reason" />
       </DataTable>
     </template>
   </Card>
@@ -108,6 +87,8 @@ import DateRange from '@/components/DateRange.vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import { useRouter } from 'vue-router';
+import { useStatus } from '@/composable/useStatus';
+import VStatus from '@/components/VStatus';
 
 function usePreviewConversion(params) {
   const conversions = ref([]);
@@ -148,6 +129,7 @@ function usePreviewConversion(params) {
 export default {
   components: {
     DateRange,
+    VStatus,
   },
   setup() {
     const notify = useNotify();
@@ -182,7 +164,7 @@ export default {
       }
     }
 
-    return { ...previewConversion, validator, submit };
+    return { ...previewConversion, validator, submit, ...useStatus() };
   },
 };
 </script>

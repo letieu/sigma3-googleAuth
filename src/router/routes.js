@@ -5,6 +5,14 @@ export default [
     name: 'advertiser',
     component: () => import('@/pages/advertiser/Index.vue'),
   },
+  {
+    path: '/advertiser/:id',
+    name: 'advertiser-detail',
+    component: () => import('@/pages/advertiser/Detail.vue'),
+    meta: {
+      parents: ['advertiser'],
+    },
+  },
 
   // Consolidation
   {

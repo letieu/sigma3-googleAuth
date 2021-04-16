@@ -39,7 +39,8 @@ export const Consolidations = {
       return 800;
     },
     status() {
-      return -1;
+      const items = [0, 1, 2, 3];
+      return items[Math.floor(Math.random() * items.length)];
     },
   },
 

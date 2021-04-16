@@ -1,6 +1,6 @@
 <template>
   <Card>
-    <template #title> Advanced Card </template>
+    <template #title> Conversions </template>
     <template #content>
       <DataTable
         :value="conversions"
@@ -15,76 +15,28 @@
         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
         responsiveLayout="scroll"
       >
-        <Column field="id" header="ID" ref="id">
-          <template #body="slotProps">
-            <router-link
-              :to="{
-                name: 'consolidation-detail',
-                params: { id: slotProps.data.id },
-              }"
-            >
-              {{ slotProps.data.id }}
-            </router-link>
-          </template>
-        </Column>
-
-        <Column
-          field="advertiser_id"
-          header="Advertiser ID"
-          ref="advertiser_id"
-        >
-          <template #filter>
-            <InputText
-              type="text"
-              class="p-column-filter"
-              data-field="advertiser_id"
-              @keyup.enter="onFilter"
-              placeholder="Advertiser ID"
-            />
-          </template>
-        </Column>
-
-        <Column field="created_by" header="Created by" ref="created_by">
-          <template #filter>
-            <InputText
-              type="text"
-              class="p-column-filter"
-              data-field="created_by"
-              @keyup.enter="onFilter"
-              placeholder="Created by"
-            />
-          </template>
-        </Column>
-
-        <Column field="start_date" header="Start - End" ref="start_date">
-          <template #filter>
-            <DateRange
-              @update:start="filters.start_date = $event"
-              @update:end="filters.end_date = $event"
-            />
-          </template>
-          <template #body="slotProps">
-            {{ slotProps.data.start_date }} -
-            {{ slotProps.data.end_date }}
-          </template>
-        </Column>
-
-        <Column field="status" header="Total payout" ref="status">
+        <Column field="offer_type" header="Offer type" />
+        <Column field="status" header="Status" ref="status">
           <template #filter>
             <Dropdown
-              :modelValue="
-                getStatusObject(consolidationStatuses, filters.status)
-              "
+              :modelValue="getStatusObject(conversionStatuses, filters.status)"
               @update:modelValue="filters.status = $event.code"
-              :options="consolidationStatuses"
+              :options="conversionStatuses"
               optionLabel="name"
               placeholder="Status"
             />
           </template>
+          <template #body="{ data }">
+            <v-status :options="conversionStatuses" :code="data.status" />
+          </template>
         </Column>
 
-        <Column field="adflex_payout" header="Total payout" ref="adflex_payout">
-        </Column>
+        <Column field="offer_id" header="Offer ID" />
+        <Column field="conversion_id" header="Conversion ID" />
+        <Column field="quantity" header="Quantity" />
+        <Column field="customer_name" header="Name" />
+        <Column field="customer_phone" header="Phone" />
+        <Column field="reason" header="Reason" />
       </DataTable>
     </template>
   </Card>
@@ -96,8 +48,12 @@ import { consolidationService } from '@/services/consolidation';
 import { useFetchData } from '@/composable/useFetchData';
 import { useNotify } from '@/composable/useNotify';
 import { useStatus } from '@/composable/useStatus';
+import VStatus from '@/components/VStatus';
 
 export default {
+  components: {
+    VStatus,
+  },
   props: ['consolidation'],
   setup(props) {
     const conversions = ref([]);

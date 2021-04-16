@@ -1,176 +1,158 @@
 <template>
-  <div class="p-grid crud-demo">
-    <div class="p-col-12">
-      <div class="card">
-        <Toast />
-        <Toolbar class="p-mb-4">
-          <template v-slot:left>
-            <Button
-              label="New"
-              icon="pi pi-plus"
-              class="p-button-success p-mr-2"
-              @click="openNew"
-            />
-            <Button
-              label="Delete"
-              icon="pi pi-trash"
-              class="p-button-danger"
-              @click="confirmDeleteSelected"
-              :disabled="!selectedProducts || !selectedProducts.length"
-            />
-          </template>
-        </Toolbar>
+  <div>
+    <DataTable
+      :value="advertisers"
+      :lazy="true"
+      :loading="loading"
+      filterDisplay="row"
+      @page="onPage"
+      :rowsPerPageOptions="[10, 20, 50]"
+      :rows="filters.size"
+      :paginator="true"
+      :totalRecords="totalRecords"
+      paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+      responsiveLayout="scroll"
+    >
+      <Column field="advertiser_id" header="Advertiser ID">
+        <template #filter>
+          <InputText
+            type="text"
+            class="p-column-filter"
+            data-field="advertiser_id"
+            @keyup.enter="onFilter"
+            placeholder="Advertiser ID"
+          />
+        </template>
+        <template #body="slotProps">
+          <router-link
+            :to="{
+              name: 'advertiser-detail',
+              params: { id: slotProps.data.id },
+            }"
+          >
+            {{ slotProps.data.advertiser_id }}
+          </router-link>
+        </template>
+      </Column>
 
-        <DataTable
-          ref="dt"
-          :value="products"
-          dataKey="id"
-          :paginator="true"
-          :rows="10"
-          :filters="filters"
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          :rowsPerPageOptions="[5, 10, 25]"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-          responsiveLayout="scroll"
-        >
-          <template #header>
-            <div
-              class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between"
-            >
-              <h5 class="p-m-0">Advertiser invoices</h5>
-            </div>
-          </template>
+      <Column field="created_by" header="Created by" ref="created_by">
+        <template #filter>
+          <InputText
+            type="text"
+            class="p-column-filter"
+            data-field="created_by"
+            @keyup.enter="onFilter"
+            placeholder="Created by"
+          />
+        </template>
+      </Column>
 
-          <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
-          <Column field="code" header="Code" :sortable="true">
-            <template #body="slotProps">
-              <span class="p-column-title">Code</span>
-              {{ slotProps.data.code }}
-            </template>
-          </Column>
-          <Column field="name" header="Name" :sortable="true">
-            <template #body="slotProps">
-              <span class="p-column-title">Name</span>
-              {{ slotProps.data.name }}
-            </template>
-          </Column>
-          <Column header="Image">
-            <template #body="slotProps">
-              <span class="p-column-title">Image</span>
-              <img
-                :src="'assets/layout/images/product/' + slotProps.data.image"
-                :alt="slotProps.data.image"
-                class="product-image"
-              />
-            </template>
-          </Column>
-          <Column field="price" header="Price" :sortable="true">
-            <template #body="slotProps">
-              <span class="p-column-title">Price</span>
-              {{ formatCurrency(slotProps.data.price) }}
-            </template>
-          </Column>
-          <Column field="category" header="Category" :sortable="true">
-            <template #body="slotProps">
-              <span class="p-column-title">Category</span>
-              {{ formatCurrency(slotProps.data.category) }}
-            </template>
-          </Column>
-          <Column field="rating" header="Reviews" :sortable="true">
-            <template #body="slotProps">
-              <span class="p-column-title">Rating</span>
-              <Rating
-                :modelValue="slotProps.data.rating"
-                :readonly="true"
-                :cancel="false"
-              />
-            </template>
-          </Column>
-          <Column field="inventoryStatus" header="Status" :sortable="true">
-            <template #body="slotProps">
-              <span class="p-column-title">Status</span>
-              <span
-                :class="
-                  'product-badge status-' +
-                  (slotProps.data.inventoryStatus
-                    ? slotProps.data.inventoryStatus.toLowerCase()
-                    : '')
-                "
-                >{{ slotProps.data.inventoryStatus }}</span
-              >
-            </template>
-          </Column>
-          <Column>
-            <template #body="slotProps">
-              <Button
-                icon="pi pi-pencil"
-                class="p-button-rounded p-button-success p-mr-2"
-                @click="editProduct(slotProps.data)"
-              />
-              <Button
-                icon="pi pi-trash"
-                class="p-button-rounded p-button-warning"
-                @click="confirmDeleteProduct(slotProps.data)"
-              />
-            </template>
-          </Column>
-        </DataTable>
-      </div>
-    </div>
+      <Column field="start_date" header="Start - End" ref="start_date">
+        <template #filter>
+          <DateRange
+            v-model:start="filters.start_date"
+            v-model:end="filters.end_date"
+          />
+        </template>
+        <template #body="slotProps">
+          {{ slotProps.data.start_date }} -
+          {{ slotProps.data.end_date }}
+        </template>
+      </Column>
+
+      <Column field="due_date" header="Due date" />
+
+      <Column field="adflex_payout" header="Tổng tiền thanh toán">
+        <template #body="{ data }">
+          {{ $formatMoney(data, 'adflex_payout') }}
+        </template>
+      </Column>
+
+      <Column field="adflex_payout" header="Tổng tiền còn lại">
+        <template #body="{ data }">
+          {{ $formatMoney(data, 'adflex_payout') }}
+        </template>
+      </Column>
+
+      <Column field="adflex_payout" header="Tổng tiền hệ thống">
+        <template #body="{ data }">
+          {{ $formatMoney(data, 'adflex_payout') }}
+        </template>
+      </Column>
+      <Column field="status" header="Status" ref="status">
+        <template #filter>
+          <Dropdown
+            :modelValue="getStatusObject(advertiserStatuses, filters.status)"
+            @update:modelValue="filters.status = $event.code"
+            :options="advertiserStatuses"
+            optionLabel="name"
+            placeholder="Status"
+          />
+        </template>
+        <template #body="{ data }">
+          <v-status :options="advertiserStatuses" :code="data.status" />
+        </template>
+      </Column>
+
+      <Column header="Action" ref="status">
+        <template #body="{ data }">
+          <advertiser-pay :advertiser="data" @update="fetchData()"/>
+        </template>
+      </Column>
+    </DataTable>
   </div>
 </template>
 
 <script>
-import ProductService from '@/services/ProductService';
-import { onBeforeMount, reactive, ref } from 'vue';
+import { ref } from 'vue';
+import { advertiserService } from '@/services/advertiser';
+import { useFetchData } from '@/composable/useFetchData';
+import { useNotify } from '@/composable/useNotify';
+import { useStatus } from '@/composable/useStatus';
+import DateRange from '@/components/DateRange.vue';
+import { TDate } from '@/helper';
+import VStatus from '@/components/VStatus';
+import AdvertiserPay from './components/AdvertiserPay.vue';
 
 export default {
+  components: {
+    DateRange,
+    VStatus,
+    AdvertiserPay,
+  },
   setup() {
-    const products = ref(null);
-    const filter = reactive({});
-    const productService = new ProductService();
-
-    onBeforeMount(() => {
-      productService.getProducts({name: 'asdf'}).then((data) => (products.value = data));
-    });
-
-    return {
-      products,
-      filter,
+    const advertisers = ref([]);
+    const loading = ref(false);
+    const notify = useNotify();
+    const params = {
+      start_date: TDate.today(),
+      end_date: TDate.today(),
+      status: '',
     };
-  },
-  data() {
-    return {
-      statuses: [
-        { label: 'INSTOCK', value: 'instock' },
-        { label: 'LOWSTOCK', value: 'lowstock' },
-        { label: 'OUTOFSTOCK', value: 'outofstock' },
-      ],
-    };
-  },
-  methods: {
-    formatCurrency(value) {
-      if (value)
-        return value.toLocaleString('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        });
-      return;
-    },
-    findIndexById(id) {
-      let index = -1;
-      for (let i = 0; i < this.products.length; i++) {
-        if (this.products[i].id === id) {
-          index = i;
-          break;
-        }
+
+    async function fetchData(query) {
+      loading.value = true;
+      try {
+        const { data, meta } = await advertiserService.getAll(query);
+        advertisers.value = data;
+        return meta.totalRows;
+      } catch (e) {
+        notify.error(e);
+        return 0;
+      } finally {
+        loading.value = false;
       }
-      return index;
-    },
+    }
+
+    return {
+      advertisers,
+      loading,
+      ...useFetchData(fetchData, params),
+      ...useStatus(),
+    };
   },
 };
 </script>
-
 <style scoped lang="scss">
 .table-header {
   display: flex;

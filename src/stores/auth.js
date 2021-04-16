@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+
 export const useAuthStore = defineStore({
   // it is used in devtools and allows restoring state
   id: 'authStore',

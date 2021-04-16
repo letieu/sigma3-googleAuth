@@ -3,7 +3,7 @@ import { useToast } from 'primevue/usetoast';
 export function useNotify() {
   const toast = useToast();
 
-  const success = (mess) => {
+  const success = (mess = 'Action complete') => {
     toast.add({
       severity: 'success',
       summary: 'Success Message',
@@ -21,7 +21,8 @@ export function useNotify() {
     });
   };
 
-  const error = (mess) => {
+  const error = (mess = 'Network Error') => {
+    console.log(mess);
     toast.add({
       severity: 'error',
       summary: 'Warn Message',

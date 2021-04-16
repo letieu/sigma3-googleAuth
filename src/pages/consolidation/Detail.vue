@@ -1,4 +1,5 @@
 <template>
+  <advertiser-create ref="advertiserCreateForm" />
   <Toolbar>
     <template #left>
       <Summary
@@ -7,10 +8,10 @@
         class="p-mr-2"
       />
       <Button
-        label="Next"
+        :label="getActionLabel(consolidation.status)"
         icon="pi pi-check"
         class="p-button-success p-ml-2"
-        :disabled="updating || !getNextStatus(consolidation.status)"
+        :disabled="updating"
         @click="update(consolidation)"
       />
       <i class="pi pi-bars p-toolbar-separator p-mr-2" />
@@ -86,13 +87,16 @@ import { useNotify } from '@/composable/useNotify';
 
 import Conversion from './components/Conversions.vue';
 import Summary from './components/Summary.vue';
+import AdvertiserCreate from '@/pages/advertiser/components/AdvertiserCreate.vue';
 
 function useUpdateConsolidation(consolidation) {
   const authStore = useAuthStore();
   const notify = useNotify();
   const updating = ref(false);
+  const advertiserCreateForm = ref();
+  const { consolidationStatuses } = useStatus();
 
-  async function update() {
+  async function confirm() {
     const status = getNextStatus(consolidation.value.status);
     if (!status) return;
     updating.value = true;
@@ -112,22 +116,50 @@ function useUpdateConsolidation(consolidation) {
     }
   }
 
-  function getNextStatus(currentStatus) {
-    const { consolidationStatuses } = useStatus();
-    const currentStatusIndex = consolidationStatuses.findIndex(
-      (status) => status.code == currentStatus
-    );
-
-    return consolidationStatuses[currentStatusIndex + 1]?.code;
+  async function update({ status, id }) {
+    switch (getStatusIndex(status)) {
+      case 2:
+        advertiserCreateForm.value.showDialog(id);
+        break;
+      case 3:
+        console.log('asdf');
+        break;
+      default:
+        confirm();
+    }
   }
 
-  return { update, updating, getNextStatus };
+  function getNextStatus(currentStatus) {
+    return consolidationStatuses[getStatusIndex(currentStatus) + 1]?.code;
+  }
+
+  function getStatusIndex(currentStatus) {
+    return consolidationStatuses.findIndex(
+      (status) => status.code == currentStatus
+    );
+  }
+
+  function getActionLabel(currentStatus) {
+    switch (getStatusIndex(currentStatus)) {
+      case 0:
+        return 'do-0';
+      case 1:
+        return 'do-1';
+      case 2:
+        return 'Create advertiser invoice';
+      case 3:
+        return 'Go to';
+    }
+  }
+
+  return { update, updating, getNextStatus, getActionLabel, advertiserCreateForm };
 }
 
 export default {
   components: {
     Conversion,
     Summary,
+    AdvertiserCreate,
   },
   setup() {
     const consolidation = ref({});
